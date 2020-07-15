@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: condition-1
+spec:
+  check:
+    args:
+    - EXITCODE=$(if [ $(params.project) = "default" ];then echo 1;else echo 0;fi); exit $EXITCODE
+    command:
+    - sh
+    - -c
+    image: alpine
+  params:
+  - name: project

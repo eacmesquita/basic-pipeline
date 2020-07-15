@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Condition
+metadata:
+  name: check-project-not-default
+spec:
+  params:
+    - name: project
+  check:
+    image: alpine
+    script: '[[ $(params.project) != default ]'
+
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: basic-pipeline
+spec:
+  params:
+    - name: oc_project
+      type: string
+      description: name of the oc_project
+  tasks:
+  - name: task1
+    taskRef:
+      name: task1
+    params:
+    - name: oc_project
+      value: $(params.oc_project)
+  - name: task2
+    taskRef:
+      name: task2
+    conditions:
+      conditionRef: "check-project-not-default"
+      params:
+        - name: "project"
+          value: $(params.oc_project)

@@ -1,0 +1,18 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata: 
+  name: task1
+spec:
+  inputs:
+    params:
+      - name: oc_project
+        description: The project being used
+        type: string
+        default: "default"
+  steps:
+      - name: apply
+        image: quay.io/openshift/origin-cli:latest
+        command: ["/bin/bash", "-c"]
+        args:
+          - |-
+            echo Using project $(inputs.params.oc_project)
